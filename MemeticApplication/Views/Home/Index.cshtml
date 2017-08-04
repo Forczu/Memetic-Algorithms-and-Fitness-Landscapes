@@ -1,0 +1,279 @@
+﻿@model MemeticApplication.MemeticLibrary.Model.VrptwProblem
+@{
+    ViewBag.Title = "Memetyczna Magisterka";
+}
+<br/>
+<div class="col-lg-12">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-iterations">Liczna iteracji</label>
+                <input type="number" class="form-control" placeholder="Liczba iteracji" min="1" id="input-iterations" value="5000">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-population-size">Rozmiar populacji</label>
+                <input type="number" class="form-control" placeholder="Rozmiar populacji" min="2" id="input-population-size" value="50">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-elite-number">Liczba elit</label>
+                <input type="number" class="form-control" placeholder="Liczba elity" min="0" id="input-elite-number" value="4">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-selection">Selekcja</label>
+                <select class="form-control" id="input-selection">
+                    <option value="roulette">Ruletka</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-crossover">Krzyżowanie</label>
+                <select class="form-control" id="input-crossover">
+                    <option value="OX">Order (OX)</option>
+                    <option value="CX">Cycle (CX)</option>
+                    <option value="PMX">Partially Matched (PMX)</option>
+                    <option value="UOX">Uniform-based Order (UOX)</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-mutation">Mutacja</label>
+                <select class="form-control" id="input-mutation">
+                    <option value="swap">Swap</option>
+                    <option value="inversion">Inversion</option>
+                    <option value="insertion">Insertion</option>
+                    <option value="displacement">Displacement</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-heuristics">Heurystyka</label>
+                <select class="form-control" id="input-heuristics">
+                    <option value="SA">Symulowane wyżarzanie</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-crossover-probability">Prawdopodobieństwo krzyżowania</label>
+                <input type="number" class="form-control" placeholder="Prawdopodobieństwo krzyżowania" min="0" max="1" id="input-crossover-probability" value="0.9" step="0.01">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-mutation-probability">Prawdopodobieństwo mutacji</label>
+                <input type="number" class="form-control" placeholder="Prawdopodobieństwo mutacji" min="0" max="1" id="input-mutation-probability" value="0.15" step="0.01">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-fitness-routes">Stała liczby tras</label>
+                <input type="number" class="form-control" placeholder="Prawdopodobieństwo krzyżowania" min="1" id="input-fitness-routes" value="5000">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-fitness-distance">Stała dystansu</label>
+                <input type="number" class="form-control" placeholder="Prawdopodobieństwo mutacji" min="1" id="input-fitness-distance" value="1">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-convergence">Próg zbieżności</label>
+                <input type="number" class="form-control" placeholder="Prawdopodobieństwo krzyżowania" min="0" id="input-convergence" value="1" step="0.01">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <label for="input-convergence-preserved">Zachowane rozwiązania</label>
+                <input type="number" class="form-control" placeholder="Prawdopodobieństwo mutacji" min="0" id="input-convergence-preserved" value="5">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr />
+
+<div class="graph" id="graph-container"></div>
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Iteracje</th>
+                <th>Liczba dróg</th>
+                <th>Dystans</th>
+                <th>Czas [s]</th>
+                <th>Restarty</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="iterations"></td>
+                <td id="roads"></td>
+                <td id="distance"></td>
+                <td id="time"></td>
+                <td id="restarts"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<button id="run-memetic" type="button" class="btn btn-default">Biegnij!</button>
+<button id="stop-memetic" type="button" class="btn btn-default">Stop!</button>
+
+@section Scripts {
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        $(function () {
+            var data = @Html.Raw(Json.Encode(Model));
+            var i,
+                s,
+                N = data.Customers.length,
+                E = 20,
+                g = {
+                    nodes: [],
+                    edges: []
+                };
+
+            var colors = [];
+            for (var i = 0; i < N; i++) {
+                colors.push(getRandomColor());
+            }
+
+            g.nodes.push({
+                id: 'n' + data.Depot.Id,
+                label: 'Depot',
+                x: data.Depot.Coord.X,
+                y: data.Depot.Coord.Y,
+                size: 0.1,
+                color: '#ff0000'
+            });
+
+            for (i = 0; i < N; i++)
+                g.nodes.push({
+                    id: 'n' + data.Customers[i].Id,
+                    label: //'Cust. ' +
+                        data.Customers[i].Id,
+                    x: data.Customers[i].Coord.X,
+                    y: data.Customers[i].Coord.Y,
+                    size: 0.1,
+                    color: '#000'
+                });
+
+            s = new sigma({
+                graph: g,
+                container: 'graph-container'
+            });
+
+            var hub = $.connection.memeticHub;
+
+            hub.client.SendNewData = function(solution, meta) {
+
+                s.graph.clear();
+
+                s.graph.addNode({
+                    id: 'n' + data.Depot.Id,
+                    label: 'Depot',
+                    x: data.Depot.Coord.X,
+                    y: data.Depot.Coord.Y,
+                    size: 0.1,
+                    color: '#ff0000'
+                });
+
+                var routes = solution.Routes.length;
+                for (var i = 0; i < routes; i++) {
+                    var routeColor = colors[i];
+                    for (var j = 0; j < solution.Routes[i].Customers.length - 1; j++) {
+                        var cust1 = solution.Routes[i].Customers[j];
+                        var cust2 = solution.Routes[i].Customers[j + 1];
+                        var id1 = cust1.Id;
+                        var id2 = cust2.Id;
+                        if (j != solution.Routes[i].Customers.length - 2)
+                            s.graph.addNode({
+                                id: 'n' + id2,
+                                label: //'Cust. ' +
+                                    id2,
+                                x: cust2.Coord.X,
+                                y: cust2.Coord.Y,
+                                size: 0.1,
+                                color: routeColor
+                            });
+                        s.graph.addEdge({
+                            id: 'e' + i * routes + j,
+                            source: 'n' + id1,
+                            target: 'n' + id2,
+                            size: 1,
+                            color: routeColor
+                        });
+                    }
+                }
+                s.refresh();
+                $('#iterations').text(meta.Iteration);
+                $('#roads').text(routes);
+                $('#distance').text(meta.Distance.toFixed(3));
+                $('#time').text(meta.Time / 1000);
+                $('#restarts').text(meta.Restarts);
+            }
+
+            $.connection.hub.start();
+
+            $("#run-memetic").click(function() {
+                var params = {
+                    Iterations: parseInt($('#input-iterations').val()),
+                    PopulationSize: parseInt($('#input-population-size').val()),
+                    EliteChildrenCount: parseInt($('#input-elite-number').val()),
+                    Selection: $('#input-selection option:selected').val(),
+                    Crossover: $('#input-crossover option:selected').val(),
+                    Mutation: $('#input-mutation option:selected').val(),
+                    Heuristics: $('#input-heuristics option:selected').val(),
+                    CrossoverProbability: parseFloat($('#input-crossover-probability').val()),
+                    MutationProbability: parseFloat($('#input-mutation-probability').val()),
+                    FitnessRoutes: parseInt($('#input-fitness-routes').val()),
+                    FitnesDistance: parseInt($('#input-fitness-distance').val()),
+                    ConvergenceLimit: parseFloat($('#input-convergence').val()),
+                    PreservedChromosomeNumber: parseInt($('#input-convergence-preserved').val())
+                };
+                var hub = $.connection.memeticHub;
+                hub.server.registerAlgorithm(data, params);
+            });
+
+            $('#stop-memetic').click(function() {
+                var hub = $.connection.memeticHub;
+                hub.server.stopAlgorithm();
+            });
+        });
+    </script>
+}

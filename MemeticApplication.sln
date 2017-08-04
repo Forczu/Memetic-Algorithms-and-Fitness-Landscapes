@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemeticApplication", "MemeticApplication\MemeticApplication.csproj", "{63AD2035-4BF4-4655-8960-1235E4094491}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemeticApplication.Tests", "MemeticApplication.Tests\MemeticApplication.Tests.csproj", "{F22F4601-87C1-4ACC-A79A-3BCA86475957}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemeticApplication.MemeticLibrary", "MemeticApplication.MemeticLibrary\MemeticApplication.MemeticLibrary.csproj", "{89B2625F-E749-469A-80DC-11A8C765B826}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63AD2035-4BF4-4655-8960-1235E4094491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63AD2035-4BF4-4655-8960-1235E4094491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63AD2035-4BF4-4655-8960-1235E4094491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63AD2035-4BF4-4655-8960-1235E4094491}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F22F4601-87C1-4ACC-A79A-3BCA86475957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22F4601-87C1-4ACC-A79A-3BCA86475957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22F4601-87C1-4ACC-A79A-3BCA86475957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22F4601-87C1-4ACC-A79A-3BCA86475957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89B2625F-E749-469A-80DC-11A8C765B826}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89B2625F-E749-469A-80DC-11A8C765B826}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89B2625F-E749-469A-80DC-11A8C765B826}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89B2625F-E749-469A-80DC-11A8C765B826}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

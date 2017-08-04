@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Memetyczna Magisterka", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - VRPTW Problem Solver</p>
+        </footer>
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <!-- START SIGMA IMPORTS -->
+    <script src="~/Scripts/sigmajs/sigma.core.js"></script>
+    <script src="~/Scripts/sigmajs/conrad.js"></script>
+    <script src="~/Scripts/sigmajs/utils/sigma.utils.js"></script>
+    <script src="~/Scripts/sigmajs/utils/sigma.polyfills.js"></script>
+    <script src="~/Scripts/sigmajs/sigma.settings.js"></script>
+    <script src="~/Scripts/sigmajs/classes/sigma.classes.dispatcher.js"></script>
+    <script src="~/Scripts/sigmajs/classes/sigma.classes.configurable.js"></script>
+    <script src="~/Scripts/sigmajs/classes/sigma.classes.graph.js"></script>
+    <script src="~/Scripts/sigmajs/classes/sigma.classes.camera.js"></script>
+    <script src="~/Scripts/sigmajs/classes/sigma.classes.quad.js"></script>
+    <script src="~/Scripts/sigmajs/classes/sigma.classes.edgequad.js"></script>
+    <script src="~/Scripts/sigmajs/captors/sigma.captors.mouse.js"></script>
+    <script src="~/Scripts/sigmajs/captors/sigma.captors.touch.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/sigma.renderers.canvas.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/sigma.renderers.webgl.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/sigma.renderers.svg.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/sigma.renderers.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/webgl/sigma.webgl.edges.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.labels.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.edges.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/svg/sigma.svg.utils.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/svg/sigma.svg.nodes.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/svg/sigma.svg.edges.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/svg/sigma.svg.edges.curve.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/svg/sigma.svg.labels.def.js"></script>
+    <script src="~/Scripts/sigmajs/renderers/svg/sigma.svg.hovers.def.js"></script>
+    <script src="~/Scripts/sigmajs/middlewares/sigma.middlewares.rescale.js"></script>
+    <script src="~/Scripts/sigmajs/middlewares/sigma.middlewares.copy.js"></script>
+    <script src="~/Scripts/sigmajs/misc/sigma.misc.animation.js"></script>
+    <script src="~/Scripts/sigmajs/misc/sigma.misc.bindEvents.js"></script>
+    <script src="~/Scripts/sigmajs/misc/sigma.misc.bindDOMEvents.js"></script>
+    <script src="~/Scripts/sigmajs/misc/sigma.misc.drawHovers.js"></script>
+    <!-- END SIGMA IMPORTS -->
+
+    @RenderSection("Scripts", false)
+
+    <style>
+        .graph {
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1000px;
+            background-color: #FFFFFF;
+            margin-bottom: 33px;
+            -moz-box-shadow: inset 1px 1px 5px 0px #c0c0c0;
+            -webkit-box-shadow: inset 1px 1px 5px 0px #c0c0c0;
+            box-shadow: inset 1px 1px 5px 0px #c0c0c0;
+        }
+    </style>
+</body>
+</html>
