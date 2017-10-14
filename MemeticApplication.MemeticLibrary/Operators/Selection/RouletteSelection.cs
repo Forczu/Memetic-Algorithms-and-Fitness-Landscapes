@@ -14,9 +14,9 @@ namespace MemeticApplication.MemeticLibrary.Operators.Selection
     /// <summary>
     /// Represents the roulette selection operator.
     /// </summary>
-    public class RouletteSelection : ISelection
+    public class RouletteSelection : Selection
     {
-        public List<Chromosome> Run(List<Chromosome> chromosomes, Parameters parameters)
+        public override List<Chromosome> Run(List<Chromosome> chromosomes, Parameters parameters)
         {
             chromosomes.Sort();
             List<float> distribution = new List<float>(chromosomes.Count);
@@ -37,46 +37,11 @@ namespace MemeticApplication.MemeticLibrary.Operators.Selection
             }
             for (int i = 0; i < chromosomes.Count; ++i)
             {
-                float nextRand = (float)RandomGenerator.NextDouble(partialSum);
+                float nextRand = (float)RandomGeneratorThreadSafe.NextDouble(partialSum);
                 float chosenOne = distribution.First(d => d >= nextRand);
                 int index = distribution.IndexOf(chosenOne);
                 Chromosome chosenSolution = chromosomes[index];
                 chosenOnes.Add(chosenSolution);
-            }
-            return chosenOnes;
-        }
-
-        /// <summary>
-        /// Runs the roulette population.
-        /// </summary>
-        /// <param name="population">The population.</param>
-        /// <returns>The selected parents.</returns>
-        public Population Run(Population population, Parameters parameters)
-        {
-            population.Sort();
-            List<float> distribution = new List<float>(population.Size);
-            float partialSum = 0.0f;
-            Population chosenOnes = new Population();
-            for (int i = 0; i < population.Size; ++i)
-            {
-                switch (parameters.FitnessStrategy)
-                {
-                    case FitnessStrategy.MINIMIZE:
-                        partialSum += 1.0f / parameters.Fitness.Get(population[i]);
-                        break;
-                    case FitnessStrategy.MAXIMIZE:
-                        partialSum += parameters.Fitness.Get(population[i]);
-                        break;
-                }
-                distribution.Add(partialSum);
-            }
-            for (int i = 0; i < population.Size; ++i)
-            {
-                float nextRand = (float)RandomGenerator.NextDouble(partialSum);
-                float chosenOne = distribution.First(d => d >= nextRand);
-                int index = distribution.IndexOf(chosenOne);
-                Chromosome chosenSolution = population[index];
-                chosenOnes.AddChromosome(chosenSolution);
             }
             return chosenOnes;
         }

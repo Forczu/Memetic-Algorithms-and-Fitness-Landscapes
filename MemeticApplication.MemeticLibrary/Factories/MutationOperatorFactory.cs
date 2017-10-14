@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MemeticApplication.MemeticLibrary.Factories
 {
-    public class MutationOperatorFactory : ObjectFactory<string, IMutationOperator>
+    public class MutationOperatorFactory : ObjectFactory<string, MutationOperator>
     {
     }
 }

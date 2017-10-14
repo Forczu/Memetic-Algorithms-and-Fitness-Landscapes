@@ -8,14 +8,37 @@ using MemeticApplication.MemeticLibrary.Generators;
 
 namespace MemeticApplication.MemeticLibrary.Operators.Mutation
 {
-    public class DisplacementOperator : IMutationOperator
+    public class DisplacementOperator : MutationOperator
     {
-        public void Run(ref Chromosome solution)
+        private static readonly string ID = "DM";
+
+        public override object Clone()
+        {
+            return new DisplacementOperator();
+        }
+
+        public override string GetId()
+        {
+            return ID;
+        }
+
+        public override void Run(IGene[] genes)
         {
             int startIndex, destIndex, length;
-            RandomGenerator.NextTwoDifferentInts(solution.Genes.Length, out startIndex, out destIndex);
-            length = RandomGenerator.NextInt(solution.Genes.Length - startIndex);
+            RandomGeneratorThreadSafe.NextTwoDifferentInts(genes.Length - 1, out startIndex, out destIndex);
+            int upperLimit = startIndex > destIndex ? startIndex : destIndex;
+            length = RandomGeneratorThreadSafe.NextInt(1, genes.Length - upperLimit + 1);
+            Displace(genes, startIndex, destIndex, length);
+        }
+
+        public override void Run(ref Chromosome solution)
+        {
+            int startIndex, destIndex, length;
+            RandomGeneratorThreadSafe.NextTwoDifferentInts(solution.Genes.Length - 1, out startIndex, out destIndex);
+            int upperLimit = startIndex > destIndex ? startIndex : destIndex;
+            length = RandomGeneratorThreadSafe.NextInt(1, solution.Genes.Length - upperLimit + 1);
             Displace(solution.Genes, startIndex, destIndex, length);
+            solution.Refresh();
         }
 
         public void Run(IGene[] genes, int startIndex, int destIndex, int length)
@@ -25,10 +48,26 @@ namespace MemeticApplication.MemeticLibrary.Operators.Mutation
 
         private void Displace(IGene[] genes, int startIndex, int destIndex, int length)
         {
-            IGene[] replaced = new IGene[length];
-            Array.Copy(genes, destIndex, replaced, 0, length);
-            Array.Copy(genes, startIndex, genes, destIndex, length);
-            Array.Copy(replaced, 0, genes, startIndex, length);
+            int offset = 0, copiedLength = length;
+            int abs = Math.Abs(startIndex - destIndex);
+            if (abs < length)
+            {
+                offset = length - abs;
+                copiedLength = abs;
+            }
+            IGene[] replaced = new IGene[copiedLength];
+            if (startIndex < destIndex)
+            {
+                Array.Copy(genes, destIndex + offset, replaced, 0, copiedLength);
+                Array.Copy(genes, startIndex, genes, destIndex, length);
+                Array.Copy(replaced, 0, genes, startIndex, copiedLength);
+            }
+            else
+            {
+                Array.Copy(genes, destIndex, replaced, 0, copiedLength);
+                Array.Copy(genes, startIndex, genes, destIndex, length);
+                Array.Copy(replaced, 0, genes, startIndex + offset, copiedLength);
+            }
         }
     }
 }

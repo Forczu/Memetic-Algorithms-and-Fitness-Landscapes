@@ -8,7 +8,7 @@ namespace MemeticApplication.MemeticLibrary.Genetic
 {
     public abstract class Chromosome : IComparable, ICloneable
     {
-        public IProblem Problem { get; set; }
+        public IProblem Problem { get; protected set; }
 
         public IGene[] Genes { get; set; }
 
@@ -24,8 +24,7 @@ namespace MemeticApplication.MemeticLibrary.Genetic
             Problem = problem;
             if (Problem != null)
                 Genes = new IGene[problem.GeneCount()];
-            int size = genes.Count();
-            Array.Copy(genes, Genes, size);
+            Genes = genes;
         }
 
 
@@ -54,5 +53,7 @@ namespace MemeticApplication.MemeticLibrary.Genetic
         public abstract int CompareTo(object obj);
 
         public abstract object Clone();
+
+        public abstract void Refresh();
     }
 }

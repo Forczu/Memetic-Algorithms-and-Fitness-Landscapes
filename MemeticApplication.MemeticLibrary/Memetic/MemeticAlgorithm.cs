@@ -24,9 +24,7 @@ namespace MemeticApplication.MemeticLibrary.Memetic
 
         IHeuristics heuristics = null;
 
-        bool stop;
-
-        public object ShannonEntrophy { get; private set; }
+        protected Parameters Parameters { get; set; }
 
         CancellationTokenSource source = new CancellationTokenSource();
 
@@ -41,8 +39,54 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         /// <param name="problem">The problem.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>The best found solution.</returns>
+        public async Task<Chromosome> Run(IProblem problem, Parameters parameters, Action<string, Chromosome, int, float, long, int> callback, string id, bool genetic)
+        {
+            Parameters = parameters;
+            chromosomeFactory = parameters.ChromosomeFactory;
+            heuristics = parameters.Heuristics;
+            
+            Population population = new Population(parameters.PopulationSize);
+            Chromosome solution = null;
+            int index = 0;
+            while (index < parameters.PopulationSize)
+            {
+                solution = parameters.ChromosomeFactory.RandomSolution(parameters.GeneCount, problem);
+                if (!population.Contains(solution))
+                {
+                    population[index] = solution;
+                    ++index;
+                }
+            }
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            watch.Start();
+            Chromosome theBestOne = population[0], localBest;
+            int iteration = 0, restarts = 0;
+            await Task.Run(() =>
+            {
+                do
+                {
+                    if (source.IsCancellationRequested)
+                        break;
+                    population = Evolve(problem, parameters, population);
+                    if (IsConvergent(population, parameters))
+                    {
+                        population = Restart(problem, population, parameters);
+                        ++restarts;
+                    }
+                    localBest = GetTheBestChromosome(population);
+                    theBestOne = theBestOne.CompareTo(localBest) < 0 ? theBestOne : localBest;
+                    callback(id, theBestOne, iteration, (theBestOne as Solution).TotalDistance(),
+                        watch.ElapsedMilliseconds, restarts);
+                } while (!StopCondition(++iteration, parameters));
+            }, source.Token);
+            source.Dispose();
+            source = new CancellationTokenSource();
+            return theBestOne;
+        }
+
         public Chromosome Run(IProblem problem, Parameters parameters)
         {
+            Parameters = parameters;
             chromosomeFactory = parameters.ChromosomeFactory;
             heuristics = parameters.Heuristics;
             var population = Initialization(problem, parameters);
@@ -59,19 +103,13 @@ namespace MemeticApplication.MemeticLibrary.Memetic
                     population = Restart(problem, population, parameters);
                 localBest = GetTheBestChromosome(population);
                 theBestOne = theBestOne.CompareTo(localBest) < 0 ? theBestOne : localBest;
-                /*int currentLineCursor = Console.CursorTop;
-                Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
-                if (counter % 1 == 0)
-                    Console.WriteLine("Iteration " + counter + ": " + localBest.ToString() + ", time elapsed: " + watch.ElapsedMilliseconds + " ms"
-                        + (conv ? " Restart!" : ""));
-                Console.Write("Iteration: " + counter);*/
             } while (!StopCondition(++counter, parameters));
-            Chromosome theBestSolution = GetTheBestChromosome(population);
+            //Chromosome theBestSolution = GetTheBestChromosome(population);
             Console.WriteLine("\nThe best solution: " + theBestOne.ToString());
-            return theBestSolution;
+            return theBestOne;
         }
 
-        public async Task<Chromosome> Run(IProblem problem, Parameters parameters, Action<string, Chromosome, int, float, long, int> callback, string id)
+        public Task<Chromosome> Run(IProblem problem, Parameters parameters, Action<string, Chromosome, int, float, long, int> callback, string id)
         {
             chromosomeFactory = parameters.ChromosomeFactory;
             heuristics = parameters.Heuristics;
@@ -80,7 +118,7 @@ namespace MemeticApplication.MemeticLibrary.Memetic
             var watch = System.Diagnostics.Stopwatch.StartNew();
             watch.Start();
             Chromosome theBestOne = population[0], localBest;
-            await Task.Run(() =>
+            var result = Task.Run(() =>
             {
                 do
                 {
@@ -98,11 +136,12 @@ namespace MemeticApplication.MemeticLibrary.Memetic
                     callback(id, theBestOne, iteration, (theBestOne as Solution).TotalDistance(),
                         watch.ElapsedMilliseconds, restarts);
                 } while (!StopCondition(++iteration, parameters));
+                return theBestOne;
             }, source.Token);
-            Chromosome theBestSolution = GetTheBestChromosome(population);
+            //Chromosome theBestSolution = GetTheBestChromosome(population);
             source.Dispose();
             source = new CancellationTokenSource();
-            return theBestSolution;
+            return result;
         }
 
         /// <summary>
@@ -114,14 +153,18 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         /// <returns></returns>
         protected Population Initialization(IProblem problem, Parameters parameters)
         {
-            Population population = new Population();
+            Population population = new Population(parameters.PopulationSize);
             Chromosome solution = null;
-            while(population.Size < parameters.PopulationSize)
+            int index = 0;
+            while(index < parameters.PopulationSize)
             {
                 solution = parameters.ChromosomeFactory.RandomSolution(parameters.GeneCount, problem);
                 solution = RunMetaheuristics(solution, parameters);
                 if (!population.Contains(solution))
-                    population.AddChromosome(solution);
+                {
+                    population[index] = solution;
+                    ++index;
+                }
             }
             return population;
         }
@@ -147,8 +190,8 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         /// <returns>The new solution population.</returns>
         protected Population Evolve(IProblem problem, Parameters parameters, Population population)
         {
-            Population nextPopulation = (Population)population.Clone();
-            Population newPopulation = Crossover(problem, nextPopulation, parameters);
+            //Population nextPopulation = (Population)population.Clone();
+            Population newPopulation = Crossover(problem, population, parameters);
             Mutation(newPopulation, parameters);
             return newPopulation;
         }
@@ -197,7 +240,7 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         /// </returns>
         protected bool IsConvergent(Population population, Parameters parameters)
         {
-            float avgEntropy = ShannonEntropy.GetEntropy(population);
+            float avgEntropy = ShannonEntropy.GetGenesEntropy(population);
             float convergence = parameters.ConvergenceLimit;
             if (avgEntropy < convergence)
                 return true;
@@ -206,19 +249,23 @@ namespace MemeticApplication.MemeticLibrary.Memetic
 
         protected Population Restart(IProblem problem, Population population, Parameters parameters)
         {
-            Population newPopulation = new Population();
+            Population newPopulation = new Population(parameters.PopulationSize);
             Chromosome chromosome;
             for (int i = 0; i < parameters.PreservedChromosomesNumber; ++i)
             {
                 chromosome = PopTheBestChromosome(population);
-                newPopulation.AddChromosome(chromosome);
+                newPopulation[i] = chromosome;
             }
-            while (newPopulation.Size < parameters.PopulationSize)
+            int index = 0;
+            while (index < parameters.PopulationSize)
             {
                 chromosome = parameters.ChromosomeFactory.RandomSolution(parameters.GeneCount, problem);
-                chromosome = RunMetaheuristics(chromosome, parameters);
+                //chromosome = RunMetaheuristics(chromosome, parameters);
                 if (!newPopulation.Contains(chromosome))
-                    newPopulation.AddChromosome(chromosome);
+                {
+                    newPopulation[index] = chromosome;
+                    ++index;
+                }
             }
             return newPopulation;
         }
@@ -238,7 +285,8 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         protected Chromosome PopTheBestChromosome(Population population)
         {
             Chromosome chromosome = GetTheBestChromosome(population);
-            population.Chromosomes.Remove(chromosome);
+            int index = Array.IndexOf(population.Chromosomes, chromosome);
+            population.Chromosomes[index] = null;
             return chromosome;
         }
 
@@ -259,7 +307,7 @@ namespace MemeticApplication.MemeticLibrary.Memetic
             var newChromosomes = new List<Chromosome>(parameters.PopulationSize);
             newChromosomes.AddRange(eliteChromosomes);
             newChromosomes.AddRange(normieChromosomes);
-            var newPopulation = new Population(newChromosomes);
+            var newPopulation = new Population(newChromosomes.ToArray());
             return newPopulation;
         }
 
@@ -272,31 +320,51 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         protected Population Crossover(IProblem problem, Population population, Parameters parameters)
         {
             Population newPopulation = population, childPopulation;
-            Chromosome parent1, parent2, child1, child2;
-            IGene[] child1Genes, child2Genes;
-            double nextCrossoverProb;
             foreach (var crossover in parameters.CrossoverOperators)
             {
+                List<Thread> crossoverThreads = new List<Thread>();
+                int threadNumber = Environment.ProcessorCount;
+                int tasksPerThread = (population.Size / threadNumber);
+                tasksPerThread += tasksPerThread % 2;
+
                 newPopulation = Selection(newPopulation, parameters);
                 newPopulation.Randomize();
-                childPopulation = new Population();
-                for (int i = 0; i < newPopulation.Size; i += 2)
+                childPopulation = new Population(population.Size);
+                for (int i = 0; i < threadNumber; ++i)
                 {
-                    nextCrossoverProb = RandomGenerator.NextDouble();
-                    parent1 = newPopulation[i];
-                    parent2 = newPopulation[i + 1];
-                    if (nextCrossoverProb > parameters.CrossoverProbability)
-                    {
-                        childPopulation.AddChromosome(parent1);
-                        childPopulation.AddChromosome(parent2);
-                        continue;
-                    }
-                    crossover.Run(parent1.Genes, parent2.Genes, out child1Genes, out child2Genes);
-                    child1 = chromosomeFactory.MakeChromosome(problem, parent1.Genes);
-                    child2 = chromosomeFactory.MakeChromosome(problem, parent2.Genes);
-                    childPopulation.AddChromosome(child1);
-                    childPopulation.AddChromosome(child2);
+                    int start = i * tasksPerThread;
+                    int end;
+                    if (i == threadNumber - 1)
+                        end = population.Size;
+                    else
+                        end = (i + 1) * tasksPerThread;
+                    Thread thread = new Thread(() => {
+                        Chromosome parent1, parent2, child1, child2;
+                        IGene[] child1Genes, child2Genes;
+                        double nextCrossoverProb;
+                        for (int j = start; j < end; j += 2)
+                        {
+                            nextCrossoverProb = RandomGeneratorThreadSafe.NextDouble();
+                            parent1 = newPopulation[j];
+                            parent2 = newPopulation[j + 1];
+                            if (nextCrossoverProb > parameters.CrossoverProbability)
+                            {
+                                childPopulation[j] = parent1;
+                                childPopulation[j + 1] = parent2;
+                                continue;
+                            }
+                            crossover.Run(parent1.Genes, parent2.Genes, out child1Genes, out child2Genes);
+                            child1 = chromosomeFactory.MakeChromosome(problem, parent1.Genes);
+                            child2 = chromosomeFactory.MakeChromosome(problem, parent2.Genes);
+                            childPopulation[j] = child1;
+                            childPopulation[j + 1] = child2;
+                        }
+                    });
+                    crossoverThreads.Add(thread);
+                    thread.Start();
                 }
+                foreach (Thread thread in crossoverThreads)
+                    thread.Join();
                 newPopulation = childPopulation;
             }
             return newPopulation;
@@ -310,17 +378,33 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         /// <returns></returns>
         protected void Mutation(Population population, Parameters parameters)
         {
-            double nextMutationProb;
             foreach (var mutation in parameters.MutationOperators)
             {
-                for (int i = 0; i < population.Size; ++i)
+                List<Thread> mutationThreads = new List<Thread>();
+                int threadNumber = Environment.ProcessorCount;
+                int tasksPerThread = population.Size / threadNumber;
+                for (int i = 0; i < threadNumber; ++i)
                 {
-                    nextMutationProb = RandomGenerator.NextDouble();
-                    if (nextMutationProb > parameters.MutationProbability)
-                        continue;
-                    Chromosome chromosome = population[i];
-                    mutation.Run(ref chromosome);
+                    int start = i * tasksPerThread;
+                    int end = (i + 1) * tasksPerThread;
+                    if (i == threadNumber - 1)
+                        end += population.Size % threadNumber;
+                    Thread thread = new Thread(() => {
+                        double nextMutationProb;
+                        for (int j = start; j < end; ++j)
+                        {
+                            nextMutationProb = RandomGeneratorThreadSafe.NextDouble();
+                            if (nextMutationProb > parameters.MutationProbability)
+                                continue;
+                            Chromosome chromosome = population[j];
+                            mutation.Run(ref chromosome);
+                        }
+                    });
+                    mutationThreads.Add(thread);
+                    thread.Start();
                 }
+                foreach (Thread thread in mutationThreads)
+                    thread.Join();
             }
         }
     }

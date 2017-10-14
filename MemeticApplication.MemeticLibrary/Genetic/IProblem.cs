@@ -1,4 +1,6 @@
-﻿namespace MemeticApplication.MemeticLibrary.Genetic
+﻿using System;
+
+namespace MemeticApplication.MemeticLibrary.Genetic
 {
     public interface IProblem
     {

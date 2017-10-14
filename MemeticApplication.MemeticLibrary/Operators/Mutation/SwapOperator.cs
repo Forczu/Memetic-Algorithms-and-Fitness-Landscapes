@@ -9,18 +9,38 @@ using MemeticApplication.MemeticLibrary.Model;
 
 namespace MemeticApplication.MemeticLibrary.Operators.Mutation
 {
-    public class SwapOperator : IMutationOperator
+    public class SwapOperator : MutationOperator
     {
+        private static readonly string ID = "SM";
+
+        public override object Clone()
+        {
+            return new SwapOperator();
+        }
+
+        public override string GetId()
+        {
+            return ID;
+        }
+
+        public override void Run(IGene[] genes)
+        {
+            int index1, index2, customerCount = genes.Count();
+            RandomGeneratorThreadSafe.NextTwoDifferentInts(customerCount, out index1, out index2);
+            Swap(genes, index1, index2);
+        }
+
         /// <summary>
         /// Runs the swap operator.
         /// </summary>
         /// <param name="solution">The referenced solution for a change.</param>
-        public void Run(ref Chromosome solution)
+        public override void Run(ref Chromosome solution)
         {
             var genes = solution.Genes;
             int index1, index2, customerCount = genes.Count();
-            RandomGenerator.NextTwoDifferentInts(customerCount, out index1, out index2);
+            RandomGeneratorThreadSafe.NextTwoDifferentInts(customerCount, out index1, out index2);
             Swap(genes, index1, index2);
+            solution.Refresh();
         }
 
         /// <summary>

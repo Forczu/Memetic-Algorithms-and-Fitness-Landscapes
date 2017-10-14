@@ -8,13 +8,33 @@ using MemeticApplication.MemeticLibrary.Generators;
 
 namespace MemeticApplication.MemeticLibrary.Operators.Mutation
 {
-    public class InsertionOperator : IMutationOperator
+    public class InsertionOperator : MutationOperator
     {
-        public void Run(ref Chromosome solution)
+        private static readonly string ID = "IM";
+
+        public override object Clone()
+        {
+            return new InsertionOperator();
+        }
+
+        public override string GetId()
+        {
+            return ID;
+        }
+
+        public override void Run(IGene[] genes)
         {
             int indexOfElement, indexOfDestination;
-            RandomGenerator.NextTwoDifferentInts(solution.Genes.Length, out indexOfElement, out indexOfDestination);
+            RandomGeneratorThreadSafe.NextTwoDifferentInts(genes.Length, out indexOfElement, out indexOfDestination);
+            Insert(genes, indexOfElement, indexOfDestination);
+        }
+
+        public override void Run(ref Chromosome solution)
+        {
+            int indexOfElement, indexOfDestination;
+            RandomGeneratorThreadSafe.NextTwoDifferentInts(solution.Genes.Length, out indexOfElement, out indexOfDestination);
             Insert(solution.Genes, indexOfElement, indexOfDestination);
+            solution.Refresh();
         }
 
         public void Run(IGene[] genes, int indexOfElement, int indexOfDestination)

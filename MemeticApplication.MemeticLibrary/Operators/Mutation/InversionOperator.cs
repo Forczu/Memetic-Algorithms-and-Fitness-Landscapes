@@ -8,13 +8,33 @@ using MemeticApplication.MemeticLibrary.Generators;
 
 namespace MemeticApplication.MemeticLibrary.Operators.Mutation
 {
-    public class InversionOperator : IMutationOperator
+    public class InversionOperator : MutationOperator
     {
-        public void Run(ref Chromosome solution)
+        private static readonly string ID = "VM";
+
+        public override object Clone()
         {
-            int startPosition = RandomGenerator.NextInt(solution.Genes.Length - 1);
-            int length = RandomGenerator.NextInt(solution.Genes.Length - startPosition - 2) + 2;
+            return new InversionOperator();
+        }
+
+        public override string GetId()
+        {
+            return ID;
+        }
+
+        public override void Run(IGene[] genes)
+        {
+            int startPosition = RandomGeneratorThreadSafe.NextInt(genes.Length - 1);
+            int length = RandomGeneratorThreadSafe.NextInt(genes.Length - startPosition - 2) + 2;
+            Inverse(genes, startPosition, length);
+        }
+
+        public override void Run(ref Chromosome solution)
+        {
+            int startPosition = RandomGeneratorThreadSafe.NextInt(solution.Genes.Length - 1);
+            int length = RandomGeneratorThreadSafe.NextInt(solution.Genes.Length - startPosition - 2) + 2;
             Inverse(solution.Genes, startPosition, length);
+            solution.Refresh();
         }
 
         public void Run(IGene[] genes, int startPosition, int length)

@@ -40,6 +40,8 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         public float ConvergenceLimit { get; set; }
 
         public int PreservedChromosomeNumber { get; set; }
+
+        public float[] HeuristicsParameters { get; set; }
     }
 
     public class Parameters
@@ -48,11 +50,11 @@ namespace MemeticApplication.MemeticLibrary.Memetic
 
         public IHeuristics Heuristics { get; set; }
 
-        public ISelection Selection { get; set; }
+        public Selection Selection { get; set; }
         
-        public IList<ICrossoverOperator> CrossoverOperators { get; set; }
+        public IList<CrossoverOperator> CrossoverOperators { get; set; }
 
-        public IList<IMutationOperator> MutationOperators { get; set; }
+        public IList<MutationOperator> MutationOperators { get; set; }
 
         public float CrossoverProbability { get; set; }
 
@@ -73,5 +75,7 @@ namespace MemeticApplication.MemeticLibrary.Memetic
         public int PreservedChromosomesNumber { get; set; }
 
         public int MaxIterations { get; set; }
+
+        public float[] HeuristicsParameters { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace MemeticApplication.MemeticLibrary.Entropy
             return (float)(Math.Log(num) / Math.Log(2));
         }
 
-        public static float GetEntropy(Population population)
+        public static float GetGenesEntropy(Population population)
         {
             int populationSize = population.Size;
             int chromosomeSize = population.Chromosomes.FirstOrDefault().Size();
@@ -42,11 +42,11 @@ namespace MemeticApplication.MemeticLibrary.Entropy
             
             for (int i = 0; i < chromosomeSize; ++i)
             {
-                float freq, infoC = 0;
+                float prob, infoC = 0;
                 foreach (KeyValuePair<object, float> letter in table[i])
                 {
-                    freq = letter.Value / populationSize;
-                    infoC += freq * LogTwo(freq);
+                    prob = letter.Value / populationSize;
+                    infoC += prob * (float)Math.Log(prob, chromosomeSize);
                 }
                 infoC *= -1;
                 entropies.Add(infoC);

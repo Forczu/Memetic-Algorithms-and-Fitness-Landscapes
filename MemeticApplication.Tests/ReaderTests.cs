@@ -8,14 +8,14 @@ namespace MemeticApplication.Tests
     [TestClass]
     public class ReaderTests
     {
-        private SolomonProblemReader reader = null;
+        private VrptwProblemReader reader = null;
 
         private static readonly string FILE_PATH = @"D:\Uczelnia\Sem 10\MGR\Dane\Solomon\solomon_100\C101.txt";
 
         [TestInitialize]
         public void SetUp()
         {
-            reader = new SolomonProblemReader();
+            reader = new VrptwProblemReader();
         }
 
         [TestMethod]

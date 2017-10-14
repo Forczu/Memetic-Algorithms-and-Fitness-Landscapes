@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MemeticApplication.MemeticLibrary.Factories
 {
-    public class CrossoverOperatorFactory : ObjectFactory<string, ICrossoverOperator>
+    public class CrossoverOperatorFactory : ObjectFactory<string, CrossoverOperator>
     {
     }
 }

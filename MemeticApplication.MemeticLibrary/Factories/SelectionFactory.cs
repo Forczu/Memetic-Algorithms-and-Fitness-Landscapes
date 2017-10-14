@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MemeticApplication.MemeticLibrary.Factories
 {
-    public class SelectionFactory : ObjectFactory<string, ISelection>
+    public class SelectionFactory : ObjectFactory<string, Selection>
     {
     }
 }

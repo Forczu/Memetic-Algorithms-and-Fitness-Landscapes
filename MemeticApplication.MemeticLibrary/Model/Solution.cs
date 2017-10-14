@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MemeticApplication.MemeticLibrary.Generators;
 using MemeticApplication.MemeticLibrary.Genetic;
+using System.Runtime.Remoting.Contexts;
 
 namespace MemeticApplication.MemeticLibrary.Model
 {
@@ -13,15 +14,13 @@ namespace MemeticApplication.MemeticLibrary.Model
     /// </summary>
     public class Solution : Chromosome, ICloneable
     {
-        private static readonly object Locker = new object();
-
         public int CustomerNumber { get { return Genes != null ? Genes.Count() : 0; } }
 
         /// <summary>
         /// The vector of routes which makes for the soluton.
         /// </summary>
         public IList<Route> Routes { get; protected set; }
-        
+
         public Solution(VrptwProblem problem) : base(problem)
         {
             for (int i = 0; i < problem.Customers.Count; ++i)
@@ -43,25 +42,6 @@ namespace MemeticApplication.MemeticLibrary.Model
             Routes = GenesToRoutes();
         }
 
-        public Solution(VrptwProblem problem, IList<Customer> customers) : base(problem)
-        {
-            int counter = 0;
-            foreach (var customer in customers)
-            {
-                Genes[counter++] = new CustomerGene(customer); 
-            }
-            Routes = GenesToRoutes();
-        }
-
-        /// <summary>
-        /// Adds the route to the solution.
-        /// </summary>
-        /// <param name="route">The route.</param>
-        public void AddRoute(Route route)
-        {
-            Routes.Add(route);
-        }
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// A new solution instance gets a reference to the same problem
@@ -72,7 +52,9 @@ namespace MemeticApplication.MemeticLibrary.Model
         /// </returns>
         public override object Clone()
         {
-            Solution copy = new Solution((VrptwProblem)Problem, Genes);
+            IGene[] newGenes = new IGene[Genes.Length];
+            Array.Copy(Genes, newGenes, Genes.Length);
+            Solution copy = new Solution((VrptwProblem)Problem, newGenes);
             return copy;
         }
 
@@ -123,24 +105,6 @@ namespace MemeticApplication.MemeticLibrary.Model
             return "Routes: " + Routes.Count + ", distance: " + TotalDistance();
         }
 
-        /// <summary>
-        /// Converts the vector of Routes representation to the vector of Customers.
-        /// </summary>
-        /// <returns>Vector of Customers</returns>
-        public List<Customer> ToVector()
-        {
-            var vector = new List<Customer>();
-            foreach (var route in Routes)
-            {
-                var custromers = route.Customers;
-                for (int i = 1; i < custromers.Count - 1; ++i)
-                {
-                    vector.Add(custromers[i]);
-                }
-            }
-            return vector;
-        }
-        
         public override int CompareTo(object obj)
         {
             Solution other = (Solution)obj;
@@ -190,35 +154,33 @@ namespace MemeticApplication.MemeticLibrary.Model
             uint currentCapacity = 0;
             Route currentRoute = CreateNewRoute(problem);
             routes.Add(currentRoute);
-            Customer customer1 = problem.Depot, customer2;
-            foreach (var gene in Genes)
+            Customer depot = problem.Depot;
+            Customer customer1 = depot, customer2;
+            for (int i = 0; i < Genes.Length; ++i)
             {
-                lock (Locker)
+                customer2 = (Customer)Genes[i].GetValue();
+                distance = problem.GetDistance(customer1.Id, customer2.Id);
+                if (distance + currentVehicleDistance > customer2.DueDate ||
+                    currentCapacity + customer2.Demand > problem.VehicleCapacity)
                 {
-                    customer2 = (Customer)gene.GetValue();
+                    currentRoute.AddCustomer(depot);
+                    currentRoute = CreateNewRoute(problem);
+                    routes.Add(currentRoute);
+                    customer1 = depot;
                     distance = problem.GetDistance(customer1.Id, customer2.Id);
-                    if (distance + currentVehicleDistance > customer2.DueDate ||
-                        currentCapacity + customer2.Demand > problem.VehicleCapacity)
-                    {
-                        currentRoute.AddCustomer(problem.Depot);
-                        currentRoute = CreateNewRoute(problem);
-                        routes.Add(currentRoute);
-                        customer1 = problem.Depot;
-                        distance = problem.GetDistance(customer1.Id, customer2.Id);
-                        currentVehicleDistance = 0.0f;
-                        currentCapacity = 0;
-                    }
-                    currentRoute.AddCustomer(customer2);
-                    currentCapacity += customer2.Demand;
-                    currentVehicleDistance += distance;
-                    if (currentVehicleDistance < customer2.ReadyTime)
-                    {
-                        currentVehicleDistance += customer2.ReadyTime - currentVehicleDistance;
-                    }
-                    customer1 = customer2;
+                    currentVehicleDistance = 0.0f;
+                    currentCapacity = 0;
                 }
+                currentRoute.AddCustomer(customer2);
+                currentCapacity += customer2.Demand;
+                currentVehicleDistance += distance + customer2.ServiceTime;
+                if (currentVehicleDistance < customer2.ReadyTime)
+                {
+                    currentVehicleDistance += customer2.ReadyTime - currentVehicleDistance;
+                }
+                customer1 = customer2;
             }
-            currentRoute.AddCustomer(problem.Depot);
+            currentRoute.AddCustomer(depot);
             return routes;
         }
 
@@ -231,6 +193,30 @@ namespace MemeticApplication.MemeticLibrary.Model
             Route route = new Route(problem);
             route.AddCustomer(problem.Depot);
             return route;
+        }
+
+        public override void Refresh()
+        {
+            Routes = GenesToRoutes();
+        }
+
+        public string ToFileText()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append((Problem as VrptwProblem).Name);
+            sb.Append(Environment.NewLine);
+            sb.Append("Liczba dróg: " + Routes.Count.ToString());
+            sb.Append(Environment.NewLine);
+            foreach (var route in Routes)
+            {
+                for (int i = 1; i < route.Customers.Count - 1; ++i)
+                {
+                    sb.Append(route.Customers[i].Id);
+                    sb.Append(' ');
+                }
+                sb.Append(Environment.NewLine);
+            }
+            return sb.ToString();
         }
     }
 }

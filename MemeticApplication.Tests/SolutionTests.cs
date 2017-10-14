@@ -20,14 +20,14 @@ namespace MemeticApplication.Tests
     {
         private static readonly string FILE_PATH = @"D:\Uczelnia\Sem 10\MGR\Dane\Solomon\solomon_100\C101.txt";
         
-        private SolomonProblemReader reader = null;
+        private VrptwProblemReader reader = null;
 
         private VrptwProblem problem = null;
 
         [TestInitialize]
         public void SetUp()
         {
-            reader = new SolomonProblemReader();
+            reader = new VrptwProblemReader();
             problem = reader.ReadFromFile(FILE_PATH);
         }
 
@@ -40,8 +40,8 @@ namespace MemeticApplication.Tests
             {
                 PopulationSize = 30,
                 Selection = new RouletteSelection(),
-                CrossoverOperators = new List<ICrossoverOperator>(),
-                MutationOperators = new List<IMutationOperator>(),
+                CrossoverOperators = new List<CrossoverOperator>(),
+                MutationOperators = new List<MutationOperator>(),
                 CrossoverProbability = 0.75f,
                 MutationProbability = 0.05f,
                 Fitness = new FitnessFunction(4.0f, 1.0f),

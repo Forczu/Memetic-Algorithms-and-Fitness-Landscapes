@@ -13,18 +13,18 @@ namespace MemeticApplication.MemeticLibrary.Heuristics
 {
     public class SimulatedAnnealing : IHeuristics
     {
-        protected Parameters parameters;
+        protected Parameters Parameters { get; set; }
 
         public Chromosome Run(Chromosome initialSolution, Parameters parameters)
         {
-            this.parameters = parameters;
+            Parameters = parameters;
 
             Chromosome currentSolution = initialSolution;
             Chromosome bestSolution = initialSolution;
 
-            double temperature = 100.0;
-            double beta = 0.95;
-            int iterations = 50;
+            double temperature = parameters.HeuristicsParameters[0];
+            double beta = parameters.HeuristicsParameters[1];
+            int iterations = (int)parameters.HeuristicsParameters[2];
 
             for (int i = 0; i < iterations; ++i)
             {
@@ -36,7 +36,7 @@ namespace MemeticApplication.MemeticLibrary.Heuristics
 
         protected void AnnealingStep(ref Chromosome currentSolution, ref Chromosome bestSolution, double temperature)
         {
-            Chromosome newSolution = parameters.ChromosomeFactory.RandomNeighbourSolution(currentSolution);
+            Chromosome newSolution = Parameters.ChromosomeFactory.RandomNeighbourSolution(currentSolution, Parameters.MutationOperators.First());
             float delta = GetDelta(newSolution, currentSolution);
             if (delta < 0)
             {
@@ -44,7 +44,7 @@ namespace MemeticApplication.MemeticLibrary.Heuristics
             }
             else
             {
-                double x = RandomGenerator.NextDouble();
+                double x = RandomGeneratorThreadSafe.NextDouble();
                 double e = Math.Exp(-delta / temperature);
                 if (x < e)
                 {
@@ -59,10 +59,10 @@ namespace MemeticApplication.MemeticLibrary.Heuristics
         /// <param name="solution1">The first solution.</param>
         /// <param name="solution2">The second solution.</param>
         /// <returns></returns>
-        protected float GeteDlta(Chromosome solution1, Chromosome solution2)
+        protected float GetDelta(Chromosome solution1, Chromosome solution2)
         {
-            float fitness1 = parameters.Fitness.Get(solution1);
-            float fitness2 = parameters.Fitness.Get(solution2);
+            float fitness1 = Parameters.Fitness.Get(solution1);
+            float fitness2 = Parameters.Fitness.Get(solution2);
             float delta = fitness1 - fitness2;
             return delta;
         }

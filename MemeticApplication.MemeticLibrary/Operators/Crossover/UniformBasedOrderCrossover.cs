@@ -8,14 +8,26 @@ using MemeticApplication.MemeticLibrary.Genetic;
 
 namespace MemeticApplication.MemeticLibrary.Operators.Crossover
 {
-    public class UniformBasedOrderCrossover : ICrossoverOperator
+    public class UniformBasedOrderCrossover : CrossoverOperator
     {
-        public void Run(IGene[] parent1, IGene[] parent2, out IGene[] child1, out IGene[] child2)
+        private static readonly string ID = "UOX";
+
+        public override object Clone()
+        {
+            return new UniformBasedOrderCrossover();
+        }
+
+        public override string GetId()
+        {
+            return ID;
+        }
+        public override void Run(IGene[] parent1, IGene[] parent2, out IGene[] child1, out IGene[] child2)
         {
             int geneCount = parent1.Count();
-            int[] ones, zeros;
-            PrepareUniform(geneCount, out ones, out zeros);
-            Run(parent1, parent2, out child1, out child2, ones, zeros);
+            //int[] ones, zeros;
+            //PrepareUniform(geneCount, out ones, out zeros);
+            bool[] mask = PrepareUniform(geneCount);
+            Run(parent1, parent2, out child1, out child2, mask);
         }
 
         public void Run(IGene[] parent1, IGene[] parent2, out IGene[] child1, out IGene[] child2, int[] ones, int[] zeros)
@@ -33,8 +45,36 @@ namespace MemeticApplication.MemeticLibrary.Operators.Crossover
             int firstParentIndex = 0, secondParentIndex = 0;
             foreach (int index in zeros)
             {
-                MoveGenesInZeroPositions(parent2, c1, index, secondParentIndex);
-                MoveGenesInZeroPositions(parent1, c2, index, firstParentIndex);
+                MoveGenesInZeroPositions(parent2, c1, index, ref secondParentIndex);
+                MoveGenesInZeroPositions(parent1, c2, index, ref firstParentIndex);
+            }
+            child1 = c1;
+            child2 = c2;
+        }
+
+        public void Run(IGene[] parent1, IGene[] parent2, out IGene[] child1, out IGene[] child2, bool[] mask)
+        {
+            int geneCount = parent1.Count();
+            IGene[] c1 = new IGene[geneCount];
+            IGene[] c2 = new IGene[geneCount];
+
+            for (int index = 0; index < mask.Length; ++index)
+            {
+                if (mask[index])
+                {
+                    c1[index] = parent1[index];
+                    c2[index] = parent2[index];
+                }
+            }
+
+            int firstParentIndex = 0, secondParentIndex = 0;
+            for (int index = 0; index < mask.Length; ++index)
+            {
+                if (!mask[index])
+                {
+                    MoveGenesInZeroPositions(parent2, c1, index, ref secondParentIndex);
+                    MoveGenesInZeroPositions(parent1, c2, index, ref firstParentIndex);
+                }
             }
             child1 = c1;
             child2 = c2;
@@ -46,7 +86,7 @@ namespace MemeticApplication.MemeticLibrary.Operators.Crossover
             double nextDouble;
             for (int i = 0; i < geneCount; ++i)
             {
-                nextDouble = RandomGenerator.NextDouble();
+                nextDouble = RandomGeneratorThreadSafe.NextDouble();
                 if (nextDouble > 0.50000000)
                     onesList.Add(i);
                 else
@@ -56,22 +96,21 @@ namespace MemeticApplication.MemeticLibrary.Operators.Crossover
             zeros = zerosList.ToArray();
         }
 
-        private void MoveGenesInZeroPositions(IGene[] otherParent, IGene[] child, int childIndex, int otherParentIndex)
+        private bool[] PrepareUniform(int geneCount)
         {
-            IGene secondParentGene = otherParent[childIndex];
+            return Enumerable.Repeat(0, geneCount).Select(i => RandomGeneratorThreadSafe.NextBool()).ToArray();
+        }
+
+        private void MoveGenesInZeroPositions(IGene[] otherParent, IGene[] child, int childIndex, ref int otherParentIndex)
+        {
+            IGene secondParentGene = null;
+            for (; otherParentIndex < otherParent.Length; ++otherParentIndex)
             {
+                secondParentGene = otherParent[otherParentIndex];
                 if (!child.Contains(secondParentGene))
-                    child[childIndex] = secondParentGene;
-                else
                 {
-                    for (int i = otherParentIndex; i < otherParent.Length; ++i)
-                    {
-                        if (!child.Contains(otherParent[i]))
-                        {
-                            child[childIndex] = otherParent[i];
-                            break;
-                        }
-                    }
+                    child[childIndex] = secondParentGene;
+                    return;
                 }
             }
         }

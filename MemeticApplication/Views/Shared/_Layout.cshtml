@@ -6,6 +6,8 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/css/bootstrap-slider.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/3.1.2/jquery.bootstrap-touchspin.min.css" rel="stylesheet" type="text/css" />
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
 </head>
 <body>
@@ -35,6 +37,8 @@
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/bootstrap-slider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/3.1.2/jquery.bootstrap-touchspin.min.js"></script>
     <!-- START SIGMA IMPORTS -->
     <script src="~/Scripts/sigmajs/sigma.core.js"></script>
     <script src="~/Scripts/sigmajs/conrad.js"></script>
@@ -87,6 +91,8 @@
     @RenderSection("Scripts", false)
 
     <style>
+        .top-buffer { margin-top:20px; }
+
         .graph {
             top: 0;
             right: 0;
@@ -99,6 +105,11 @@
             -moz-box-shadow: inset 1px 1px 5px 0px #c0c0c0;
             -webkit-box-shadow: inset 1px 1px 5px 0px #c0c0c0;
             box-shadow: inset 1px 1px 5px 0px #c0c0c0;
+        }
+
+        button#load-problem-instance
+        {
+             vertical-align: middle
         }
     </style>
 </body>

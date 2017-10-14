@@ -10,7 +10,7 @@ namespace MemeticApplication.MemeticLibrary.Model
     /// The representation of a customer in the routing map
     /// (a node in the graph).
     /// </summary>
-    public class Customer : IEquatable<Customer>
+    public class Customer
     {
         /// <summary>
         /// Gets or sets the id.
@@ -78,6 +78,10 @@ namespace MemeticApplication.MemeticLibrary.Model
             ReadyTime = readyTime;
             DueDate = dueDate;
             ServiceTime = serviceTime;
+        }
+
+        public Customer(Customer other) : this(other.Id, other.Coord.X, other.Coord.Y, other.Demand, other.ReadyTime, other.DueDate, other.ServiceTime)
+        {
         }
 
         /// <summary>

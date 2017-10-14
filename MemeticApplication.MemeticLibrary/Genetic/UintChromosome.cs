@@ -33,5 +33,10 @@ namespace MemeticApplication.MemeticLibrary.Genetic
         {
             throw new NotImplementedException();
         }
+
+        public override void Refresh()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

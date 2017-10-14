@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MemeticApplication.MemeticLibrary.Fitness
 {
-    public class FitnessFunction
+    public class FitnessFunction : ICloneable
     {
         protected float[] Constants { get; set; }
 
@@ -25,6 +25,13 @@ namespace MemeticApplication.MemeticLibrary.Fitness
                 fitness += values[i] * Constants[i];
             }
             return fitness;
+        }
+
+        public object Clone()
+        {
+            float[] constants = new float[Constants.Length];
+            Array.Copy(Constants, constants, Constants.Length);
+            return new FitnessFunction(constants);
         }
     }
 }

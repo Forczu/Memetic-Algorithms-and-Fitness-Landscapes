@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemeticApplication.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemeticApplication.MemeticLibrary", "MemeticApplication.MemeticLibrary\MemeticApplication.MemeticLibrary.csproj", "{89B2625F-E749-469A-80DC-11A8C765B826}"
 EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ModelingProject1", "ModelingProject1\ModelingProject1.modelproj", "{461DFDEB-C39B-4055-9685-6F018D22AEC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{89B2625F-E749-469A-80DC-11A8C765B826}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89B2625F-E749-469A-80DC-11A8C765B826}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89B2625F-E749-469A-80DC-11A8C765B826}.Release|Any CPU.Build.0 = Release|Any CPU
+		{461DFDEB-C39B-4055-9685-6F018D22AEC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{461DFDEB-C39B-4055-9685-6F018D22AEC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{461DFDEB-C39B-4055-9685-6F018D22AEC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{461DFDEB-C39B-4055-9685-6F018D22AEC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

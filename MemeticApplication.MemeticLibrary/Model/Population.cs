@@ -11,28 +11,23 @@ namespace MemeticApplication.MemeticLibrary.Model
 {
     public class Population : ICloneable
     {
-        public List<Chromosome> Chromosomes { get; protected set; }
+        public Chromosome[] Chromosomes { get; protected set; }
 
-        public Population()
+        public Population(int size)
         {
-            Chromosomes = new List<Chromosome>();
+            Chromosomes = new Chromosome[size];
         }
 
-        public Population(List<Chromosome> chromosomes)
+        public Population(Chromosome[] chromosomes)
         {
             Chromosomes = chromosomes;
         }
 
-        public int Size { get { return Chromosomes.Count; } }
+        public int Size { get { return Chromosomes.Count(); } }
 
-        public void AddChromosome(Chromosome chromosome)
+        public void AddChromosome(Chromosome chromosome, int index)
         {
-            Chromosomes.Add(chromosome);
-        }
-
-        public void AddChromosome(IEnumerable<Chromosome> chromosomes)
-        {
-            Chromosomes.AddRange(chromosomes);
+            Chromosomes[index] = chromosome;
         }
 
         public List<Chromosome> Take(int size)
@@ -43,7 +38,7 @@ namespace MemeticApplication.MemeticLibrary.Model
 
         public List<Chromosome> Take(int start, int size)
         {
-            var list = Chromosomes.GetRange(start, size);
+            var list = Chromosomes.Skip(start).Take(size).ToList();
             return list;
         }
 
@@ -66,7 +61,7 @@ namespace MemeticApplication.MemeticLibrary.Model
 
         public void Sort()
         {
-            Chromosomes.Sort();
+            Array.Sort(Chromosomes);
         }
 
         public void Randomize()
@@ -76,10 +71,10 @@ namespace MemeticApplication.MemeticLibrary.Model
 
         public object Clone()
         {
-            Population copy = new Population();
-            foreach (var chromosome in Chromosomes)
+            Population copy = new Population(Chromosomes.Count());
+            for (int i = 0; i < Chromosomes.Count(); ++i)
             {
-                copy.AddChromosome((Chromosome)chromosome.Clone());
+                copy[i] = (Chromosome)Chromosomes[i].Clone();
             }
             return copy;
         }

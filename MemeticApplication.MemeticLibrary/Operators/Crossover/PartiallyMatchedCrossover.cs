@@ -12,8 +12,20 @@ namespace MemeticApplication.MemeticLibrary.Operators.Crossover
     /// <summary>
     /// Represents the partially matched crossover operation (PMX).
     /// </summary>
-    public class PartiallyMatchedCrossover : ICrossoverOperator
+    public class PartiallyMatchedCrossover : CrossoverOperator
     {
+        private static readonly string ID = "PMX";
+
+        public override object Clone()
+        {
+            return new PartiallyMatchedCrossover();
+        }
+
+        public override string GetId()
+        {
+            return ID;
+        }
+
         /// <summary>
         /// Runs the PMX operator.
         /// The cut points are chosen randomly.
@@ -22,10 +34,10 @@ namespace MemeticApplication.MemeticLibrary.Operators.Crossover
         /// <param name="parent2">The second parent.</param>
         /// <param name="child1">The first child.</param>
         /// <param name="child2">The second child.</param>
-        public void Run(IGene[] parent1, IGene[] parent2, out IGene[] child1, out IGene[] child2)
+        public override void Run(IGene[] parent1, IGene[] parent2, out IGene[] child1, out IGene[] child2)
         {
             int cutPoint1, cutPoint2;
-            RandomGenerator.NextTwoIntsFirstBigger(1, parent1.Count() - 1, out cutPoint1, out cutPoint2);
+            RandomGeneratorThreadSafe.NextTwoIntsFirstBigger(1, parent1.Count() - 1, out cutPoint1, out cutPoint2);
             Run(parent1, parent2, out child1, out child2, cutPoint1, cutPoint2);
         }
 
@@ -50,7 +62,6 @@ namespace MemeticApplication.MemeticLibrary.Operators.Crossover
             int sourceIndex = cutPoint1 + 1;
             Array.Copy(parent1, sourceIndex, c1, sourceIndex, middleSize);
             Array.Copy(parent2, sourceIndex, c2, sourceIndex, middleSize);
-
             IGene[] copiedMiddle1 = new IGene[middleSize];
             IGene[] copiedMiddle2 = new IGene[middleSize];
             Array.Copy(parent1, sourceIndex, copiedMiddle1, 0, middleSize);
@@ -58,9 +69,7 @@ namespace MemeticApplication.MemeticLibrary.Operators.Crossover
 
             var mappings = new Tuple<IGene, IGene>[middleSize];
             for (int i = 0; i < middleSize; ++i)
-            {
                 mappings[i] = new Tuple<IGene, IGene>(copiedMiddle1[i], copiedMiddle2[i]);
-            }
 
             int iterations = customerCount - middleSize;
             int position = cutPoint2;

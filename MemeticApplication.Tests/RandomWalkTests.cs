@@ -12,7 +12,7 @@ namespace MemeticApplication.Tests
     [TestClass]
     public class RandomWalkTests
     {
-        private SolomonProblemReader reader = null;
+        private VrptwProblemReader reader = null;
         private AbstractChromosomeFactory factory = null;
         private FitnessFunction fitness = null;
 
@@ -21,7 +21,7 @@ namespace MemeticApplication.Tests
         [TestInitialize]
         public void SetUp()
         {
-            reader = new SolomonProblemReader();
+            reader = new VrptwProblemReader();
             factory = new SolutionFactory();
             fitness = new FitnessFunction(5000, 1);
         }
@@ -30,8 +30,8 @@ namespace MemeticApplication.Tests
         public void Solomon50RandomWalk()
         {
             var problem = reader.ReadFromFile(FILE_PATH);
-            var landscape = new Landscape(problem, new PartiallyMatchedCrossover(), factory, fitness);
-            var data = landscape.RandomWalk(2000);
+            var landscape = new Landscape(problem, factory, fitness);
+            var data = landscape.RandomWalk(2000, new PartiallyMatchedCrossover());
             var dataStr = data.ToString();
             string path = @"E:\Solomon_100_C101_RW.csv";
             if (!File.Exists(path))
