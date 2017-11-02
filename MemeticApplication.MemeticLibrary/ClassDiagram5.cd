@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MemeticApplication.MemeticLibrary.Factories.AbstractChromosomeFactory">
+    <Position X="6.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Factories\AbstractChromosomeFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Factories.SolutionFactory" Collapsed="true">
+    <Position X="6.5" Y="13.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Factories\SolutionFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Fitness.FitnessFunction">
+    <Position X="0.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAgAAAAAAAAAABA=</HashCode>
+      <FileName>Fitness\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Genetic.Chromosome" BaseTypeListCollapsed="true">
+    <Position X="9" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAABAgAQAgAAAAAAACAAAAAAAAAAAAEAAABA=</HashCode>
+      <FileName>Genetic\Chromosome.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Problem" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Genes" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Landscapes.Landscape">
+    <Position X="3.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAIAAAAAAAAAAAAAAACBAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Landscapes\Landscape.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ChromosomeFactory" />
+      <Property Name="FitnessFunction" />
+      <Property Name="Problem" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Memetic.MemeticAlgorithm">
+    <Position X="1.25" Y="5.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAEAAAABAAAAIIIAAAAAIAAAAEQAAABBIIAAAACAQAM=</HashCode>
+      <FileName>Memetic\MemeticAlgorithm.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parameters" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Memetic.Parameters">
+    <Position X="4.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAoIACAAAAAACAAIgAAAAAAAAEAgAAAACAgRAAASAA=</HashCode>
+      <FileName>Memetic\Parameters.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ChromosomeFactory" />
+      <Property Name="Fitness" />
+      <Property Name="FitnessStrategy" />
+      <Property Name="Heuristics" />
+      <Property Name="Selection" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="CrossoverOperators" />
+      <Property Name="MutationOperators" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Model.Coordinates">
+    <Position X="0.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>Model\Coordinates.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Model.Customer">
+    <Position X="3.5" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAEAAAAAACAAgAAAAAQAAAAAAAAAQAAAAAAAAAQ=</HashCode>
+      <FileName>Model\Customer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Coord" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Model.Population">
+    <Position X="11.25" Y="11.25" Width="1.5" />
+    <AssociationLine Name="Chromosomes" Type="MemeticApplication.MemeticLibrary.Genetic.Chromosome">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.076" Y="-1.174" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAACAAQAACAIAAAAAAAAAEAAAAYABA=</HashCode>
+      <FileName>Model\Population.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Chromosomes" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Model.Route">
+    <Position X="6.5" Y="17" Width="1.5" />
+    <AssociationLine Name="Customers" Type="MemeticApplication.MemeticLibrary.Model.Customer">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.483" Y="-1.989" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAFAAAIAAAAAAAAEEQAEAAAAICAAAAEAAAAAAAAAABA=</HashCode>
+      <FileName>Model\Route.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Problem" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Customers" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Model.Solution">
+    <Position X="9" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAABAAASEkEAEAAAACAAAAAAAAAAAAAAAgBA=</HashCode>
+      <FileName>Model\Solution.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Routes" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Model.VrptwProblem">
+    <Position X="3.5" Y="17.25" Width="1.5" />
+    <AssociationLine Name="Customers" Type="MemeticApplication.MemeticLibrary.Model.Customer">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.065" Y="0.091" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgkCAABAAAAAAAAAAAAAAARAAAAAAABAAAAAAAAACAA=</HashCode>
+      <FileName>Model\VrptwProblem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Depot" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Customers" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Crossover.CrossoverOperator">
+    <Position X="9.25" Y="2" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAQABEAIAABI=</HashCode>
+      <FileName>Operators\Crossover\CrossoverOperator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Crossover.CycleCrossover" Collapsed="true">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAABAkAAAAAAAgAAEAAAAAAAAAAAAAAIAABI=</HashCode>
+      <FileName>Operators\Crossover\CycleCrossover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Crossover.OrderCrossover" Collapsed="true">
+    <Position X="11.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAABAAAAIAABI=</HashCode>
+      <FileName>Operators\Crossover\OrderCrossover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Crossover.PartiallyMatchedCrossover" Collapsed="true">
+    <Position X="5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAAAAAAIAABI=</HashCode>
+      <FileName>Operators\Crossover\PartiallyMatchedCrossover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Crossover.UniformBasedOrderCrossover" Collapsed="true">
+    <Position X="9.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAgAAAAAAAIAAAAAAAAAAAAAAAAAIAABI=</HashCode>
+      <FileName>Operators\Crossover\UniformBasedOrderCrossover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Mutation.DisplacementOperator" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAgAAIAABI=</HashCode>
+      <FileName>Operators\Mutation\DisplacementOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Mutation.InsertionOperator" Collapsed="true">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAIAABI=</HashCode>
+      <FileName>Operators\Mutation\InsertionOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Mutation.InversionOperator" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAIAAAAAAAAAAAAAAAAAAAIAABI=</HashCode>
+      <FileName>Operators\Mutation\InversionOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Mutation.MutationOperator">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAQABEAIAABI=</HashCode>
+      <FileName>Operators\Mutation\MutationOperator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Mutation.SwapOperator" Collapsed="true">
+    <Position X="5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAABAAAAAAAAAAIAABI=</HashCode>
+      <FileName>Operators\Mutation\SwapOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Selection.TournamentSelection" Collapsed="true">
+    <Position X="6.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operators\Selection\TournamentSelection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Selection.RankSelection" Collapsed="true">
+    <Position X="11.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operators\Selection\RankSelection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Selection.RouletteSelection" Collapsed="true">
+    <Position X="9" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operators\Selection\RouletteSelection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemeticApplication.MemeticLibrary.Operators.Selection.Selection">
+    <Position X="9" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operators\Selection\Selection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="MemeticApplication.MemeticLibrary.Genetic.IGene" Collapsed="true">
+    <Position X="11.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Genetic\IGene.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MemeticApplication.MemeticLibrary.Genetic.IProblem" Collapsed="true">
+    <Position X="9" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Genetic\IProblem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MemeticApplication.MemeticLibrary.Heuristics.IHeuristics" Collapsed="true">
+    <Position X="2.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Heuristics\IHeuristics.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="MemeticApplication.MemeticLibrary.Fitness.FitnessStrategy" Collapsed="true">
+    <Position X="4.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAACAAAAAAA=</HashCode>
+      <FileName>Fitness\FitnessStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
